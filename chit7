@@ -1,0 +1,101 @@
+SET SERVEROUTPUT ON;
+
+CREATE TABLE Stud_Marks (
+    Roll NUMBER PRIMARY KEY,
+    Name VARCHAR2(50),
+    Total_Marks NUMBER
+);
+CREATE TABLE Result (
+    Roll NUMBER PRIMARY KEY,
+    Name VARCHAR2(50),
+    Class VARCHAR2(20)
+);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES (1, 'Anil', 1400);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES (2, 'Bob', 911);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES (3, 'Mahi', 1499);
+ INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES       (4, 'Chiku', 1475);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES   (5, 'Jaddu', 850);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES   (6, 'Sonu', 950);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES  (7, 'Shana', 975);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES  (8, 'Gabbar', 1330);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES (9, 'Prince', 840);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES (10, 'Harry', 855);
+
+
+--select * from STUD_MARKS ;
+
+-- PL/SQL stored procedure
+CREATE OR REPLACE PROCEDURE Nikam AS
+BEGIN
+    FOR rec IN (SELECT Roll, Name, Total_Marks FROM Stud_Marks) LOOP
+        IF rec.Total_Marks <= 1500 AND rec.Total_Marks >= 990 THEN
+            INSERT INTO Result (Roll, Name, Class) VALUES (rec.Roll, rec.Name, 'Distinction');
+        ELSIF rec.Total_Marks BETWEEN 900 AND 989 THEN
+            INSERT INTO Result (Roll, Name, Class) VALUES (rec.Roll, rec.Name, 'First Class');
+        ELSIF rec.Total_Marks BETWEEN 825 AND 899 THEN
+            INSERT INTO Result (Roll, Name, Class) VALUES (rec.Roll, rec.Name, 'Higher Second Class');
+        END IF;
+    END LOOP;
+  
+END;
+/
+----------------------
+CREATE OR REPLACE FUNCTION CalculateResult(
+    p_Roll IN Stud_Marks.Roll%TYPE,
+    p_Name IN Stud_Marks.Name%TYPE,
+    p_Total_Marks IN Stud_Marks.Total_Marks%TYPE
+) RETURN VARCHAR2
+IS
+    v_Class VARCHAR2(20);
+BEGIN
+    IF p_Total_Marks <= 1500 AND p_Total_Marks >= 990 THEN
+        v_Class := 'Distinction';
+    ELSIF p_Total_Marks BETWEEN 900 AND 989 THEN
+        v_Class := 'First Class';
+    ELSIF p_Total_Marks BETWEEN 825 AND 899 THEN
+        v_Class := 'Higher Second Class';
+    ELSE
+        v_Class := 'Pass'; 
+    END IF;
+
+    INSERT INTO Result (Roll, Name, Class) VALUES (p_Roll, p_Name, v_Class);
+
+    RETURN v_Class; 
+END;
+/
+
+-----------------
+--drop table RESULT;
+DECLARE
+    v_Roll Stud_Marks.Roll%TYPE;
+    v_Name Stud_Marks.Name%TYPE;
+    v_Marks Stud_Marks.Total_Marks%TYPE;
+    v_Result VARCHAR2(20);
+BEGIN
+    
+    FOR rec IN (SELECT Roll, Name, Total_Marks FROM Stud_Marks) LOOP
+        v_Roll := rec.Roll;
+        v_Name := rec.Name;
+        v_Marks := rec.Total_Marks;
+
+        
+        v_Result := CalculateResult(v_Roll, v_Name, v_Marks);
+
+       
+        DBMS_OUTPUT.PUT_LINE('Result for ' || v_Name || ' (Roll ' || v_Roll || '): ' || v_Result);
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('Categorization of students completed.');
+END;
+/
+
+select * from Result;
