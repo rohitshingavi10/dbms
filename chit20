@@ -1,0 +1,74 @@
+Indexing:
+
+1.Create a Collection:
+db.createCollection("students");
+
+2.Insert Documents:
+db.students.insertMany([
+  { Rollno: 1, name: "Navin", subject: "DMSA", marks: 78 },
+  { Rollno: 2, name: "Anusha", subject: "OSD", marks: 75 },
+  { Rollno: 3, name: "Ravi", subject: "TOC", marks: 69 },
+  { Rollno: 4, name: "Veena", subject: "TOC", marks: 70 },
+  { Rollno: 5, name: "Pravini", subject: "OSD", marks: 80 },
+  { Rollno: 6, name: "Reena", subject: "DMSA", marks: 50 },
+  { Rollno: 7, name: "Geeta", subject: "CN", marks: 90 },
+  { Rollno: 8, name: "Akash", subject: "CN", marks: 85 }
+]);
+
+3.Create Single Index (e.g., on the "subject" field):
+db.students.createIndex({ subject: 1 });
+
+4.Create Compound Index (e.g., on "subject" and "marks" fields):
+db.students.createIndex({ subject: 1, marks: 1 });
+
+5.Create a Unique Index (e.g., on "Rollno" field):
+db.students.createIndex({ Rollno: 1 }, { unique: true });
+
+6.Show Index Information:
+db.students.getIndexes();
+
+7.Remove an Index (e.g., to remove the "subject" index):
+db.students.dropIndex("subject_1");
+-----------------------------------------------------------------
+1.Write an aggregate function to find Max marks of Each Subject:
+db.students.aggregate([
+  { $group: { _id: "$subject", maxMarks: { $max: "$marks" } } }
+]);
+
+2.Write an aggregate function to find Min marks of Each Subject:
+db.students.aggregate([
+  { $group: { _id: "$subject", minMarks: { $min: "$marks" } } }
+]);
+
+3.Write an aggregate function to find Sum of marks of Each Subject:
+db.students.aggregate([
+  { $group: { _id: "$subject", totalMarks: { $sum: "$marks" } } }
+]);
+
+4.Write an aggregate function to find Avg marks of Each Subject:
+db.students.aggregate([
+  { $group: { _id: "$subject", avgMarks: { $avg: "$marks" } } }
+]);
+
+5.Write an aggregate function to find the first record of Each Subject:
+db.students.aggregate([
+  { $sort: { subject: 1, marks: 1 } },
+  { $group: { _id: "$subject", firstRecord: { $first: "$$ROOT" } } }
+]);
+
+6.Write an aggregate function to find the last record of Each Subject:
+db.students.aggregate([
+  { $sort: { subject: 1, marks: -1 } },
+  { $group: { _id: "$subject", lastRecord: { $first: "$$ROOT" } } }
+]);
+
+7.Write an aggregate function to find the count number of records of each subject:
+db.students.aggregate([
+  { $group: { _id: "$subject", count: { $sum: 1 } } }
+]);
+
+8.Write an aggregate function to find the count number of records of each subject using $count:
+db.students.aggregate([
+  { $group: { _id: "$subject", count: { $sum: 1 } } },
+  { $count: "total" }
+]);
