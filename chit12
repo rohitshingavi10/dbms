@@ -1,0 +1,27 @@
+-- Create the Library_Audit table if it doesn't exist
+CREATE TABLE IF NOT EXISTS Library_Audit (
+    Audit_ID INT AUTO_INCREMENT PRIMARY KEY,
+    ID INT,
+    Title VARCHAR(255),
+    Author VARCHAR(255),
+    Action VARCHAR(10),
+    ChangeTimestamp TIMESTAMP
+);
+
+-- Create an AFTER UPDATE trigger
+CREATE TRIGGER Library_AfterUpdate
+AFTER UPDATE ON Library
+FOR EACH ROW
+BEGIN
+    INSERT INTO Library_Audit (ID, Title, Author, Action, ChangeTimestamp)
+    VALUES (OLD.ID, OLD.Title, OLD.Author, 'UPDATE', NOW());
+END;
+
+-- Create an AFTER DELETE trigger
+CREATE TRIGGER Library_AfterDelete
+AFTER DELETE ON Library
+FOR EACH ROW
+BEGIN
+    INSERT INTO Library_Audit (ID, Title, Author, Action, ChangeTimestamp)
+    VALUES (OLD.ID, OLD.Title, OLD.Author, 'DELETE', NOW());
+END;
