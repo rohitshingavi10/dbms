@@ -1,39 +1,40 @@
-SET SERVEROUTPUT ON;
+CREATE TABLE Stud (
+    Roll NUMBER,
+    Att NUMBER,
+    Status CHAR(2)
+);
 DECLARE
-    rollno Stud.Roll%TYPE;
-    s_att Stud.Att%TYPE;
-    s_stat Stud.Status%TYPE;
+    v_roll_no NUMBER;
+    v_attendance NUMBER;
 BEGIN
-  
-    rollno := &enter_roll_number; -- Use & to prompt the user for input
+    -- Accept user input for Roll number
+    v_roll_no := &roll_no; -- Use & to accept user input in SQL Developer
 
-    
-    SELECT Att
-    INTO s_att
+    -- Get the attendance for the provided Roll number
+    SELECT Att INTO v_attendance
     FROM Stud
-    WHERE Roll = rollno;
+    WHERE Roll = v_roll_no;
 
-    IF s_att < 75 THEN
-        -- Attendance is less than 75%
+    -- Check attendance percentage
+    IF v_attendance < 75 THEN
+        -- If attendance is less than 75%, display "Term not granted" and set status to "D"
         DBMS_OUTPUT.PUT_LINE('Term not granted');
-        -- Update the status to 'D'
         UPDATE Stud
         SET Status = 'D'
-        WHERE Roll = rollno;
+        WHERE Roll = v_roll_no;
     ELSE
-       
+        -- If attendance is 75% or more, display "Term granted" and set status to "ND"
         DBMS_OUTPUT.PUT_LINE('Term granted');
-      
         UPDATE Stud
         SET Status = 'ND'
-        WHERE Roll = rollno;
+        WHERE Roll = v_roll_no;
     END IF;
 
-
+    COMMIT; -- Commit the transaction
 
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
-        DBMS_OUTPUT.PUT_LINE('Roll number not found in the Stud table');
+        DBMS_OUTPUT.PUT_LINE('Student not found for the given Roll number.');
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
 END;
