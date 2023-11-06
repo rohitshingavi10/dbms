@@ -1,0 +1,28 @@
+i. Find the average price for each customer having status 'A':
+db.orderinfo.aggregate([
+  {
+    $match: { status: 'A' }
+  },
+  {
+    $group: {
+      _id: "$cust_id",
+      avgPrice: { $avg: "$price" }
+    }
+  }
+]);
+
+ii. Display the status of the customers whose price lies between 100 and 1000:
+db.orderinfo.find({
+  $and: [
+    { price: { $gte: 100 } },
+    { price: { $lte: 1000 } }
+  ]
+}, { _id: 0, status: 1 });
+
+iii. Display the customer information without "_id":
+db.orderinfo.find({}, { _id: 0 });
+
+iv. Create a simple index on the orderinfo collection and fire the queries:
+db.orderinfo.createIndex({ cust_id: 1 });
+
+
