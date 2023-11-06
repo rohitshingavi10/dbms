@@ -1,0 +1,151 @@
+i. Create a table of employee details:
+
+import java.sql.Connection;
+import java.sql.Statement;
+
+public class CreateEmployeeTable {
+    public static void main(String[] args) {
+        try {
+            // Establish a connection to the MySQL database
+            Connection connection = YourDatabaseConnectionClass.getConnection();
+            
+            // Create a SQL statement
+            Statement statement = connection.createStatement();
+            
+            // Create the Employee table
+            String createTableSQL = "CREATE TABLE Employee (SSN INT PRIMARY KEY, Ename VARCHAR(255), state VARCHAR(2), salary DECIMAL(10, 2))";
+            statement.execute(createTableSQL);
+            
+            // Close the statement and connection
+            statement.close();
+            connection.close();
+            
+            System.out.println("Employee table created successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+ii. Insert Records into the Employee table:
+import java.sql.Connection;
+import java.sql.Statement;
+
+public class InsertEmployeeRecords {
+    public static void main(String[] args) {
+        try {
+            // Establish a connection to the MySQL database
+            Connection connection = YourDatabaseConnectionClass.getConnection();
+            
+            // Create a SQL statement
+            Statement statement = connection.createStatement();
+            
+            // Insert records into the Employee table
+            String insertRecordSQL = "INSERT INTO Employee (SSN, Ename, state, salary) " +
+                                     "VALUES (123456789, 'John Doe', 'MH', 50000.00)";
+            statement.execute(insertRecordSQL);
+            
+            // Close the statement and connection
+            statement.close();
+            connection.close();
+            
+            System.out.println("Record inserted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+iii. Retrieve the details based on Social Security Number (SSN):
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class RetrieveEmployeeDetails {
+    public static void main(String[] args) {
+        try {
+            // Establish a connection to the MySQL database
+            Connection connection = YourDatabaseConnectionClass.getConnection();
+            
+            // Create a SQL statement
+            Statement statement = connection.createStatement();
+            
+            // Retrieve employee details based on SSN
+            String ssn = "123456789";
+            String retrieveSQL = "SELECT * FROM Employee WHERE SSN = " + ssn;
+            ResultSet resultSet = statement.executeQuery(retrieveSQL);
+            
+            while (resultSet.next()) {
+                String ename = resultSet.getString("Ename");
+                String state = resultSet.getString("state");
+                double salary = resultSet.getDouble("salary");
+                System.out.println("Ename: " + ename + ", State: " + state + ", Salary: " + salary);
+            }
+            
+            // Close the statement and connection
+            resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+iv. Update the employee state from 'MH' to 'TN':
+
+import java.sql.Connection;
+import java.sql.Statement;
+
+public class UpdateEmployeeState {
+    public static void main(String[] args) {
+        try {
+            // Establish a connection to the MySQL database
+            Connection connection = YourDatabaseConnectionClass.getConnection();
+            
+            // Create a SQL statement
+            Statement statement = connection.createStatement();
+            
+            // Update employee state from 'MH' to 'TN'
+            String updateSQL = "UPDATE Employee SET state = 'TN' WHERE SSN = 123456789";
+            statement.execute(updateSQL);
+            
+            // Close the statement and connection
+            statement.close();
+            connection.close();
+            
+            System.out.println("Employee state updated successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+v. Delete all the employees from 'Gujrat':
+
+java
+Copy code
+import java.sql.Connection;
+import java.sql.Statement;
+
+public class DeleteEmployeesFromGujrat {
+    public static void main(String[] args) {
+        try {
+            // Establish a connection to the MySQL database
+            Connection connection = YourDatabaseConnectionClass.getConnection();
+            
+            // Create a SQL statement
+            Statement statement = connection.createStatement();
+            
+            // Delete employees from 'Gujrat'
+            String deleteSQL = "DELETE FROM Employee WHERE state = 'Gujrat'";
+            statement.execute(deleteSQL);
+            
+            // Close the statement and connection
+            statement.close();
+            connection.close();
+            
+            System.out.println("Employees from 'Gujrat' deleted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
