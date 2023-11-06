@@ -1,0 +1,51 @@
+DECLARE
+    v_roll_no    NUMBER;
+    v_book_name  VARCHAR2(100);
+    v_issue_date DATE;
+    v_status     CHAR(1);
+    v_fine_amt   NUMBER := 0;
+    v_days_late  NUMBER := 0;
+BEGIN
+    -- Accept user input
+    v_roll_no := &roll_no;  -- Input Roll No from the user
+    v_book_name := '&book_name';  -- Input Book Name from the user
+
+    -- Retrieve the necessary information from the Borrower table
+    SELECT DateofIssue, Status
+    INTO v_issue_date, v_status
+    FROM Borrower
+    WHERE Rollin = v_roll_no AND NameofBook = v_book_name;
+
+    -- Calculate the number of days late
+    v_days_late := TRUNC(SYSDATE - v_issue_date);
+
+    -- Check if the book is overdue
+    IF v_status = 'I' AND v_days_late > 0 THEN
+        -- Calculate the fine amount based on the number of days late
+        IF v_days_late <= 15 THEN
+            v_fine_amt := v_days_late * 5; -- Rs. 5 per day
+        ELSE
+            v_fine_amt := 15 * 5 + (v_days_late - 15) * 50; -- Rs. 5 per day for the first 15 days, Rs. 50 per day thereafter
+        END IF;
+
+        -- Insert the fine details into the Fine table
+        INSERT INTO Fine (Roll_no, Date, Amt)
+        VALUES (v_roll_no, SYSDATE, v_fine_amt);
+
+        -- Update the status to 'R' (Returned)
+        UPDATE Borrower
+        SET Status = 'R'
+        WHERE Rollin = v_roll_no AND NameofBook = v_book_name;
+
+        -- Display fine details
+        DBMS_OUTPUT.PUT_LINE('Fine of Rs. ' || v_fine_amt || ' is imposed for ' || v_days_late || ' days late.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('The book is not overdue or already returned.');
+    END IF;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Borrower record not found for the given Roll No and Book Name.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+/
