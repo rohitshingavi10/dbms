@@ -1,27 +1,56 @@
--- Create the Library_Audit table if it doesn't exist
-CREATE TABLE IF NOT EXISTS Library_Audit (
-    Audit_ID INT AUTO_INCREMENT PRIMARY KEY,
-    ID INT,
-    Title VARCHAR(255),
-    Author VARCHAR(255),
-    Action VARCHAR(10),
-    ChangeTimestamp TIMESTAMP
+CREATE TABLE Library (
+    Book_ID NUMBER,
+    Title VARCHAR2(100),
+    Author VARCHAR2(50),
+    Publish_Year NUMBER
 );
 
--- Create an AFTER UPDATE trigger
-CREATE TRIGGER Library_AfterUpdate
-AFTER UPDATE ON Library
-FOR EACH ROW
-BEGIN
-    INSERT INTO Library_Audit (ID, Title, Author, Action, ChangeTimestamp)
-    VALUES (OLD.ID, OLD.Title, OLD.Author, 'UPDATE', NOW());
-END;
+CREATE TABLE Library_Audit (
+    Audit_ID NUMBER,
+    Book_ID NUMBER,
+    Title VARCHAR2(100),
+    Author VARCHAR2(50),
+    Publish_Year NUMBER,
+    Action VARCHAR2(10),
+    Audit_Date TIMESTAMP
+);
 
--- Create an AFTER DELETE trigger
-CREATE TRIGGER Library_AfterDelete
-AFTER DELETE ON Library
+CREATE OR REPLACE TRIGGER Library_Update_Delete_Trigger
+AFTER UPDATE OR DELETE ON Library
 FOR EACH ROW
+DECLARE
+    v_action VARCHAR2(10);
 BEGIN
-    INSERT INTO Library_Audit (ID, Title, Author, Action, ChangeTimestamp)
-    VALUES (OLD.ID, OLD.Title, OLD.Author, 'DELETE', NOW());
+    IF UPDATING THEN
+        v_action := 'UPDATE';
+    ELSE
+        v_action := 'DELETE';
+    END IF;
+
+    -- Insert the old values into the Library_Audit table
+    INSERT INTO Library_Audit (Audit_ID, Book_ID, Title, Author, Publish_Year, Action, Audit_Date)
+    VALUES (
+        NULL, -- Use a sequence or other method to generate a unique Audit_ID
+        :OLD.Book_ID,
+        :OLD.Title,
+        :OLD.Author,
+        :OLD.Publish_Year,
+        v_action,
+        SYSTIMESTAMP
+    );
 END;
+/
+
+-- Update a record in the Library table
+UPDATE Library
+SET Title = 'New Title'
+WHERE Book_ID = 1;
+
+-- Delete a record in the Library table
+DELETE FROM Library
+WHERE Book_ID = 2;
+
+SELECT * FROM Library_Audit;
+
+
+
