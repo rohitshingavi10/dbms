@@ -1,0 +1,42 @@
+CREATE TABLE Stud_Marks (
+    Name VARCHAR2(50),
+    Total_Marks NUMBER
+);
+
+CREATE TABLE Result (
+    Roll NUMBER,
+    Name VARCHAR2(50),
+    Class VARCHAR2(20)
+);
+
+CREATE OR REPLACE PROCEDURE proc_Grade(p_name IN VARCHAR2, p_total_marks IN NUMBER) AS
+BEGIN
+    IF p_total_marks <= 1500 AND p_total_marks >= 990 THEN
+        INSERT INTO Result (Roll, Name, Class)
+        VALUES (1, p_name, 'Distinction');
+    ELSIF p_total_marks BETWEEN 900 AND 989 THEN
+        INSERT INTO Result (Roll, Name, Class)
+        VALUES (2, p_name, 'First Class');
+    ELSIF p_total_marks BETWEEN 825 AND 899 THEN
+        INSERT INTO Result (Roll, Name, Class)
+        VALUES (3, p_name, 'Higher Second Class');
+    ELSE
+        INSERT INTO Result (Roll, Name, Class)
+        VALUES (4, p_name, 'Pass');
+    END IF;
+END proc_Grade;
+/
+
+BEGIN
+    -- Call the stored procedure for each student with their name and total marks
+    proc_Grade('Student1', 1000);
+    proc_Grade('Student2', 1100);
+    proc_Grade('Student3', 800);
+    -- Add more students as needed
+
+    COMMIT; -- Commit the transaction
+END;
+/
+
+SELECT * FROM Result;
+
