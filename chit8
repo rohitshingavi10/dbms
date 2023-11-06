@@ -1,0 +1,18 @@
+i. Find the names of the instructors in the university who have taught courses semester-wise:
+SELECT DISTINCT I.name AS Instructor_Name
+FROM instructor I
+JOIN teaches T ON I.T_ID = T.T_ID
+WHERE T.semester = 'your_desired_semester';
+
+ii. Create a view on a single table to retrieve student details:
+CREATE VIEW StudentDetails AS
+SELECT S_ID, name, dept_name, tot_cred
+FROM student;
+
+iii. Rename the column of the student table from dept_name to department_name:
+ALTER TABLE student
+CHANGE COLUMN dept_name department_name VARCHAR(255);
+
+iv. Delete students whose department is NULL:
+DELETE FROM student
+WHERE department_name IS NULL;
