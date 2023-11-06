@@ -1,0 +1,49 @@
+1.Using Map-Reduce to find state-wise population:
+// Map function
+var mapStateWisePopulation = function() {
+  emit(this.state, this.population);
+};
+
+// Reduce function
+var reduceStateWisePopulation = function(key, values) {
+  return Array.sum(values);
+};
+
+// Run the Map-Reduce operation
+db.city.mapReduce(mapStateWisePopulation, reduceStateWisePopulation, {
+  out: "stateWisePopulation"
+});
+
+------------------------------------------------------------------------------------------
+2.Using Map-Reduce to find city-wise population:
+// Map function
+var mapCityWisePopulation = function() {
+  emit(this.city, this.population);
+};
+
+// Reduce function
+var reduceCityWisePopulation = function(key, values) {
+  return Array.sum(values);
+};
+
+// Run the Map-Reduce operation
+db.city.mapReduce(mapCityWisePopulation, reduceCityWisePopulation, {
+  out: "cityWisePopulation"
+});
+--------------------------------------------------------------------------
+
+3.Using Map-Reduce to find type-wise population:
+// Map function
+var mapTypeWisePopulation = function() {
+  emit(this.type, this.population);
+};
+
+// Reduce function
+var reduceTypeWisePopulation = function(key, values) {
+  return Array.sum(values);
+};
+
+// Run the Map-Reduce operation
+db.city.mapReduce(mapTypeWisePopulation, reduceTypeWisePopulation, {
+  out: "typeWisePopulation"
+});
