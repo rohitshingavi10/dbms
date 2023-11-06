@@ -1,0 +1,24 @@
+1.Create the emp table:
+
+CREATE TABLE emp (
+  Eno INT PRIMARY KEY AUTO_INCREMENT,
+  Ename VARCHAR(255) NOT NULL,
+  Address VARCHAR(255) DEFAULT 'Nashik',
+  Joindate DATE,
+  Post VARCHAR(255)
+);
+-------------------------------------------
+2.Insert data into the emp table:
+INSERT INTO emp (Ename, Joindate, Post)
+VALUES
+  ('John Doe', '2023-01-15', 'Manager'),
+  ('Alice Smith', '2023-02-10', 'Engineer'),
+  ('Bob Johnson', '2023-03-20', 'Analyst');
+--------------------------------------------
+3.Create an index on the Ename field:
+CREATE INDEX idx_Ename ON emp (Ename);
+---------------------------------------------
+4.Create a view to show only Ename and Salary (assuming you have a Salary field in the table):
+CREATE VIEW emp_view AS
+SELECT Ename, Salary
+FROM emp;
