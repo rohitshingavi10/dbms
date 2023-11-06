@@ -1,0 +1,43 @@
+1.Find different locations from where employees belong to:
+SELECT DISTINCT address FROM employee;
+
+2.What is the maximum and minimum salary:
+SELECT MAX(salary) AS MaxSalary, MIN(salary) AS MinSalary FROM employee;
+
+3.Display the content of the employee table according to the ascending order of salary amount:
+SELECT * FROM employee ORDER BY salary ASC;
+
+4.Find the name of employees who live in Nasik or Pune city:
+SELECT name FROM employee WHERE address IN ('Nasik', 'Pune');
+
+5.Find the name of employees who do not receive a commission:
+SELECT name FROM employee WHERE commission IS NULL;
+
+6.Change the city of Amit to Nashik:
+UPDATE employee SET address = 'Nashik' WHERE name = 'Amit';
+
+7.Find the information of employees whose name starts with 'A':
+SELECT * FROM employee WHERE name LIKE 'A%';
+
+8.Find the count of staff from Mumbai:
+SELECT COUNT(*) AS MumbaiStaffCount FROM employee WHERE address = 'Mumbai';
+
+9.Find the count of staff from each city:
+SELECT address, COUNT(*) AS StaffCount FROM employee GROUP BY address;
+
+10.Find the address from where employees are belonging as well as where projects are going on:
+SELECT DISTINCT address FROM employee
+UNION
+SELECT DISTINCT location FROM projects;
+
+11.Find city-wise minimum salary:
+SELECT address, MIN(salary) AS MinSalary FROM employee GROUP BY address;
+
+12.Find city-wise maximum salary having maximum salary greater than 26,000:
+SELECT address, MAX(salary) AS MaxSalary
+FROM employee
+GROUP BY address
+HAVING MAX(salary) > 26000;
+
+13.Delete the employee who has a salary greater than 30,000:
+DELETE FROM employee WHERE salary > 30000;
