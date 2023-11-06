@@ -1,0 +1,40 @@
+-- Create the N_RollCall table
+CREATE TABLE N_RollCall (
+    ID NUMBER PRIMARY KEY,
+    Name VARCHAR2(50)
+);
+
+-- Create the O_RollCall table
+CREATE TABLE O_RollCall (
+    ID NUMBER PRIMARY KEY,
+    Name VARCHAR2(50)
+);
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+    v_n_id N_RollCall.ID%TYPE;
+    v_n_name N_RollCall.Name%TYPE;
+    v_exists BOOLEAN := FALSE;
+BEGIN
+    -- Open a cursor for the N_RollCall table
+    FOR n_record IN (SELECT ID, Name FROM N_RollCall) LOOP
+        -- Check if the data already exists in the O_RollCall table
+        SELECT 1 INTO v_exists
+        FROM O_RollCall
+        WHERE ID = n_record.ID;
+
+        -- If the data doesn't exist in the O_RollCall table, insert it
+        IF v_exists = 0 THEN
+            INSERT INTO O_RollCall (ID, Name)
+            VALUES (n_record.ID, n_record.Name);
+        END IF;
+    END LOOP;
+
+    DBMS_OUTPUT.PUT_LINE('Data merged successfully.');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+/
+
