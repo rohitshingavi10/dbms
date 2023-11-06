@@ -1,0 +1,59 @@
+SET SERVEROUTPUT ON;
+
+CREATE TABLE Stud_Marks (
+    Roll NUMBER PRIMARY KEY,
+    Name VARCHAR2(50),
+    Total_Marks NUMBER
+);
+CREATE TABLE Result (
+    Roll NUMBER PRIMARY KEY,
+    Name VARCHAR2(50),
+    Class VARCHAR2(20)
+);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES (1, 'Anil', 1400);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES (2, 'Bob', 911);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES (3, 'Mahi', 1499);
+ INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES       (4, 'Chiku', 1475);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES   (5, 'Jaddu', 850);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES   (6, 'Sonu', 950);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES  (7, 'Shana', 975);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES  (8, 'Gabbar', 1330);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES (9, 'Prince', 840);
+INSERT INTO Stud_Marks (Roll, Name, Total_Marks) 
+VALUES (10, 'Harry', 855);
+
+
+--select * from STUD_MARKS ;
+
+-- PL/SQL stored procedure
+CREATE OR REPLACE PROCEDURE proc_Grade AS
+BEGIN
+    FOR rec IN (SELECT Roll, Name, Total_Marks FROM Stud_Marks) LOOP
+        IF rec.Total_Marks <= 1500 AND rec.Total_Marks >= 990 THEN
+            INSERT INTO Result (Roll, Name, Class) VALUES (rec.Roll, rec.Name, 'Distinction');
+        ELSIF rec.Total_Marks BETWEEN 900 AND 989 THEN
+            INSERT INTO Result (Roll, Name, Class) VALUES (rec.Roll, rec.Name, 'First Class');
+        ELSIF rec.Total_Marks BETWEEN 825 AND 899 THEN
+            INSERT INTO Result (Roll, Name, Class) VALUES (rec.Roll, rec.Name, 'Higher Second Class');
+        END IF;
+    END LOOP;
+  
+END;
+/
+
+DECLARE
+BEGIN
+    proc_Grade;
+    DBMS_OUTPUT.PUT_LINE('Categorization of students completed.');
+END;
+/
+select * from Result;
