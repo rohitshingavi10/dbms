@@ -1,0 +1,33 @@
+chit -25
+i. Get duty allocation details for employee number 123 for the first shift in the month of April 2003:
+SELECT *
+FROM `Duty-alloc`
+WHERE e_no = 123
+  AND month = 4
+  AND year = 2003
+  AND shift = 1;
+
+ii. Get the employees whose rate of pay is greater than or equal to the rate of pay of employees with the name 'Sachin':
+SELECT e.*
+FROM Empl e
+WHERE e.pay_rate >= (
+  SELECT pay_rate
+  FROM Empl
+  WHERE e_name = 'Sachin'
+);
+
+iii. Create a view for displaying minimum, maximum, and average salary for all the posts:
+CREATE VIEW PostSalarySummary AS
+SELECT post,
+       MIN(pay_rate) AS min_salary,
+       MAX(pay_rate) AS max_salary,
+       AVG(pay_rate) AS avg_salary
+FROM Empl
+GROUP BY post;
+
+iv. Get the count of different employees on each shift having the post 'manager':
+SELECT shift, COUNT(e_no) AS count_of_managers
+FROM `Duty-alloc` da
+INNER JOIN Position p ON da.pos_no = p.pos_no
+WHERE p.post = 'manager'
+GROUP BY shift;
