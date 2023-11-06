@@ -1,0 +1,55 @@
+1.Create Database:
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
+
+public class MongoDBExample {
+    public static void main(String[] args) {
+        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017"); // Replace with your MongoDB server URI
+        MongoDatabase database = mongoClient.getDatabase("InstituteDB"); // Create a new database named "InstituteDB"
+    }
+}
+
+2.Create Collection
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
+
+// Assuming you already have a database object from the previous code
+
+MongoCollection<Document> collection = database.getCollection("Students"); // Create a collection named "Students"
+
+3.Insert Document:
+import org.bson.Document;
+
+// Assuming you have a collection object from the previous code
+
+Document student = new Document("name", "John Doe")
+        .append("studentId", 12345)
+        .append("department", "Computer Science")
+        .append("gpa", 3.8);
+
+collection.insertOne(student); // Insert a document into the "Students" collection
+
+4.Displat Data
+// You can use MongoDB queries to retrieve and display data.
+// For example, to find all documents in the "Students" collection:
+
+MongoCursor<Document> cursor = collection.find().iterator();
+while (cursor.hasNext()) {
+    Document doc = cursor.next();
+    System.out.println(doc.toJson());
+}
+cursor.close();
+
+5.Remove Document
+// To remove a document from the "Students" collection, you can use a filter query.
+// For example, to remove a student with a specific studentId:
+
+collection.deleteOne(eq("studentId", 12345)); // Remove the document with studentId 12345
+
+6.Update Document
+// To update a document in the "Students" collection, you can use an update query.
+// For example, to update the GPA of a student:
+
+collection.updateOne(eq("studentId", 12345), set("gpa", 3.9)); // Update the GPA of the student with studentId 12345
+
