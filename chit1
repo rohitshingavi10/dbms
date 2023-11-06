@@ -1,0 +1,51 @@
+1. Show the cname, Acc_Type, amount information of customer who is having an saving account.
+SELECT C.cname, A.Acc_Type, A.amount
+FROM Customers C
+INNER JOIN Accounts A ON C.C_id = A.C_id
+WHERE A.Acc_Type = 'Saving';
+
+2.Display the data using Natural, left and right join.
+Natural join:
+SELECT C.cname, A.Acc_Type, A.amount
+FROM Customers C
+NATURAL JOIN Accounts A;
+Left Join:
+SELECT C.cname, A.Acc_Type, A.amount
+FROM Customers C
+LEFT JOIN Accounts A ON C.C_id = A.C_id;
+Right Join:
+SELECT C.cname, A.Acc_Type, A.amount
+FROM Customers C
+RIGHT JOIN Accounts A ON C.C_id = A.C_id;
+
+
+3. Display the information of customers living in the same city as of ‘pooja’
+SELECT C.*
+FROM Customers C
+WHERE C.City = (SELECT City FROM Customers WHERE cname = 'pooja');
+
+4. Display the information of account, having less amount than average amount throughout the bank
+SELECT A.*
+FROM Accounts A
+WHERE A.amount < (SELECT AVG(amount) FROM Accounts);
+
+5. Display the C_id having maximum amount in account
+SELECT C_id
+FROM Accounts
+WHERE amount = (SELECT MAX(amount) FROM Accounts);
+
+6. Display the amount and acc_type of those customers whose amount is the minimum amount of that Acc_type
+SELECT C.C_id, A.amount, A.Acc_Type
+FROM Accounts A
+INNER JOIN Customers C ON A.C_id = C.C_id
+WHERE (A.C_id, A.amount) IN (SELECT C_id, MIN(amount) FROM Accounts GROUP BY C_id, Acc_Type);
+
+7. Display the amount of those accounts whose amount is higher than amount of any saving account amount.
+SELECT A.amount
+FROM Accounts A
+WHERE A.amount > (SELECT MAX(amount) FROM Accounts WHERE Acc_Type = 'Saving');
+
+
+
+
+
