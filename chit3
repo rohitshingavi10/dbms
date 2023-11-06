@@ -1,0 +1,40 @@
+SET SERVEROUTPUT ON;
+DECLARE
+    rollno Stud.Roll%TYPE;
+    s_att Stud.Att%TYPE;
+    s_stat Stud.Status%TYPE;
+BEGIN
+  
+    rollno := &enter_roll_number; -- Use & to prompt the user for input
+
+    
+    SELECT Att
+    INTO s_att
+    FROM Stud
+    WHERE Roll = rollno;
+
+    IF s_att < 75 THEN
+        -- Attendance is less than 75%
+        DBMS_OUTPUT.PUT_LINE('Term not granted');
+        -- Update the status to 'D'
+        UPDATE Stud
+        SET Status = 'D'
+        WHERE Roll = rollno;
+    ELSE
+       
+        DBMS_OUTPUT.PUT_LINE('Term granted');
+      
+        UPDATE Stud
+        SET Status = 'ND'
+        WHERE Roll = rollno;
+    END IF;
+
+
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Roll number not found in the Stud table');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+/
