@@ -1,0 +1,53 @@
+1.Create the "department" database:
+use department;
+
+2.Create the "teacher" collection with fields as name, department, experience, and salary:
+db.createCollection("teacher");
+
+Insert sample documents into the "teacher" collection:
+db.teacher.insertMany([
+  { name: "Teacher1", department: "Mathematics", experience: 5, salary: 60000 },
+  { name: "Teacher2", department: "Computer Science", experience: 8, salary: 75000 },
+  { name: "Teacher3", department: "Mathematics", experience: 3, salary: 55000 },
+  { name: "Teacher4", department: "Computer Science", experience: 7, salary: 70000 },
+  { name: "Teacher5", department: "Physics", experience: 6, salary: 62000 },
+]);
+
+
+
+3.Display the department-wise average salary:
+db.teacher.aggregate([
+  {
+    $group: {
+      _id: "$department",
+      avgSalary: { $avg: "$salary" }
+    }
+  }
+]);
+
+4.Display the number of employees working in each department:
+db.teacher.aggregate([
+  {
+    $group: {
+      _id: "$department",
+      count: { $sum: 1 }
+    }
+  }
+]);
+
+
+5.Display the department-wise minimum salary:
+db.teacher.aggregate([
+  {
+    $group: {
+      _id: "$department",
+      minSalary: { $min: "$salary" }
+    }
+  }
+]);
+
+6.Apply an index on a specific field (e.g., department):
+db.teacher.createIndex({ department: 1 });
+
+Drop the index:
+db.teacher.dropIndex("department_1");
